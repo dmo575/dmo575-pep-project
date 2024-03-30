@@ -35,6 +35,7 @@ public class MessageDAO {
 
             // if there is a record (there should be one if the INSERT succeeded)
             if(rs.next()) {
+
                 // get the generated id, which is an int on the database
                 int message_id = rs.getInt("message_id");
 
@@ -151,5 +152,70 @@ public class MessageDAO {
             System.out.println("MessageDAO::deleteMessageById: " + e.getMessage() + "\n");
         }
         return false;
+    }
+
+    public boolean updateMessageById(int id, String message_text) {
+
+        // get connection
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+
+            // prepare statement
+            String sql = "UPDATE Message SET message_text=? WHERE message_id=?";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, message_text);
+            ps.setInt(2, id);
+
+            // execute statement
+            int recordsAffected = ps.executeUpdate();
+
+            return recordsAffected > 0;
+            
+        } catch (Exception e) {
+            System.out.println("MessageDAO::updateMessageById: " + e.getMessage() + "\n");
+        }
+        return false;
+    }
+
+    public ArrayList<Message> getAllMessagesOfAccount(int account_id) {
+
+        // get connection
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+
+            // will hold all messages
+            ArrayList<Message> messages = new ArrayList<Message>();
+
+            // prepare statement
+            String sql = "SELECT * FROM Message WHERE posted_by=?";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, account_id);
+
+            // execute statement
+            ps.executeQuery();
+
+            // get results set from query
+            ResultSet rs = ps.getResultSet();
+
+            // store all records into their own Message objects
+            while(rs.next()) {
+                messages.add(new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch"))
+                );
+            }
+
+            return messages;
+            
+        } catch (Exception e) {
+            System.out.println("MessageDAO::getAllMessagesOfAccount: " + e.getMessage() + "\n");
+        }
+        return null;
     }
 }
