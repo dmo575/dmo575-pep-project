@@ -34,6 +34,9 @@ public class SocialMediaController {
         app.post("/login", this::loginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getMessagesHandler);
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
+
 
 
         return app;
@@ -117,5 +120,28 @@ public class SocialMediaController {
         ArrayList<Message> messages = messageService.getAllMessages();
 
         context.json(messages);
+    }
+
+    private void getMessageByIdHandler(Context context) {
+
+        String paramMessageId = context.pathParam("message_id");
+        Message message = messageService.getMessageById(Integer.parseInt(paramMessageId));
+
+        if(message != null) {
+            context.json(message);
+        }
+        context.status(200);
+    }
+
+    private void deleteMessageByIdHandler(Context context) {
+
+        String paramMessageId = context.pathParam("message_id");
+        Message message = messageService.deleteMessageById(Integer.parseInt(paramMessageId));
+
+        System.out.print(message);
+        if(message != null) {
+            context.json(message);
+        }
+        context.status(200);
     }
 }

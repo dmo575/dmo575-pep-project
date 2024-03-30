@@ -93,4 +93,63 @@ public class MessageDAO {
         }
         return null;
     }
+
+    public Message getMessageById(int id) {
+
+        // get connection
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+
+            // prepare statement
+            String sql = "SELECT * FROM Message WHERE message_id=?";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            // execute statement
+            ps.executeQuery();
+
+            // get results set from query
+            ResultSet rs = ps.getResultSet();
+
+            // store all records into their own Message objects
+            if(rs.next()) {
+                return new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch")
+                );
+            }
+            
+        } catch (Exception e) {
+            System.out.println("MessageDAO::getMessageById: " + e.getMessage() + "\n");
+        }
+        return null;
+    }
+
+    public boolean deleteMessageById(int id) {
+
+        // get connection
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+
+            // prepare statement
+            String sql = "DELETE FROM Message WHERE message_id=?";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            // execute statement
+            int recordsAffected = ps.executeUpdate();
+
+            return recordsAffected > 0;
+            
+        } catch (Exception e) {
+            System.out.println("MessageDAO::deleteMessageById: " + e.getMessage() + "\n");
+        }
+        return false;
+    }
 }
