@@ -38,7 +38,7 @@ public class AccountDAO {
                 // get the generated id, which is an int on the database
                 int new_account_id = rs.getInt("account_id");
 
-                // return the account to the called, containing the correct account id
+                // return the account to the caller, containing the correct account id
                 return new Account(
                     new_account_id, 
                     account.username,
@@ -126,6 +126,42 @@ public class AccountDAO {
         } catch (Exception e) {
             // print to the console the error message of any potential exception that might have surfaced on the try block
             System.out.println("AccountDAO::getAccountByUsername: " + e.getMessage() + "\n");
+        }
+
+        return null;
+    }
+
+    public Account getAccountById(int id) {
+
+        // get a connection to the database trough the ConnectionUtil class
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+
+            // prepare query
+            String sql = "SELECT * FROM Account WHERE account_id=?";
+
+            // prepare statement
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            // execute statement
+            ps.executeQuery();
+
+            // retrieve result
+            ResultSet rs = ps.getResultSet();
+
+            if(rs.next()) {
+                return new Account(
+                    rs.getInt("account_id"),
+                    rs.getString("username"),
+                    rs.getString("password")
+                );
+            }
+
+        } catch (Exception e) {
+            // print to the console the error message of any potential exception that might have surfaced on the try block
+            System.out.println("AccountDAO::getAccountById: " + e.getMessage() + "\n");
         }
 
         return null;

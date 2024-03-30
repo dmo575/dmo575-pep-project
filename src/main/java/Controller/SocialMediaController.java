@@ -3,7 +3,9 @@ package Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -16,6 +18,8 @@ public class SocialMediaController {
 
     private ObjectMapper om = new ObjectMapper();
     private AccountService accountService = new AccountService();
+    private MessageService messageService = new MessageService();
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -26,6 +30,8 @@ public class SocialMediaController {
         app.get("example-endpoint", this::exampleHandler);
         app.post("/register", this::registerHandler);
         app.post("/login", this::loginHandler);
+        app.post("/messages", this::postMessageHandler);
+
 
 
         return app;
@@ -55,7 +61,7 @@ public class SocialMediaController {
             
         } catch (Exception e) {
 
-            context.status(400);
+            context.status(400).result(e.getMessage());
         }
     }
 
@@ -71,14 +77,36 @@ public class SocialMediaController {
             // ask the service class to add thew new account (this throws an exception if the account data is not valid)
             Account validated_account = accountService.validateAccount(account);
 
-            //System.out.println("validated_account: ");
-            //System.out.println(validated_account);
-
+            // return validated account
             context.json(validated_account);
             
         } catch (Exception e) {
 
-            context.status(401);
+            context.status(401).result("Login failed.");
+        }
+    }
+
+    private void postMessageHandler(Context context) {
+
+        try {
+
+            // get the message object
+            Message message = om.readValue(context.body(), Message.class);
+
+            // ask the service class to add thew new account (this throws an exception if the account data is not valid)
+            Message new_message = messageService.addMessage(message);
+
+            System.out.print("**given: ");
+            System.out.print(message + "\n");
+            System.out.print("**new_message: ");
+            System.out.print(new_message + "\n");
+
+            // return validated account
+            context.json(new_message);
+            
+        } catch (Exception e) {
+
+            context.status(400).result(e.getMessage());
         }
     }
 }

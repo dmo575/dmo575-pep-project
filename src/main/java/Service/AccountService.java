@@ -32,4 +32,9 @@ public class AccountService {
 
         return null;
     }
+
+    public boolean userExists(int id) {
+
+        return accountDAO.getAccountById(id) != null;
+    }
 }
