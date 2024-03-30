@@ -1,5 +1,7 @@
 package Controller;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
@@ -31,7 +33,7 @@ public class SocialMediaController {
         app.post("/register", this::registerHandler);
         app.post("/login", this::loginHandler);
         app.post("/messages", this::postMessageHandler);
-
+        app.get("/messages", this::getMessagesHandler);
 
 
         return app;
@@ -108,5 +110,12 @@ public class SocialMediaController {
 
             context.status(400);
         }
+    }
+
+    private void getMessagesHandler(Context context) {
+
+        ArrayList<Message> messages = messageService.getAllMessages();
+
+        context.json(messages);
     }
 }

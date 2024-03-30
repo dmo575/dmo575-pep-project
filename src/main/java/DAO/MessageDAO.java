@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 import Util.ConnectionUtil;
 
 public class MessageDAO {
@@ -50,6 +52,45 @@ public class MessageDAO {
             System.out.println("MessageDAO::insertMessage: " + e.getMessage() + "\n");
         }
 
+        return null;
+    }
+
+    public ArrayList<Message> getAllMessages() {
+
+        // get connection
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+
+            // will hold all messages
+            ArrayList<Message> messages = new ArrayList<Message>();
+
+            // prepare statement
+            String sql = "SELECT * FROM Message";
+
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            // execute statement
+            ps.executeQuery();
+
+            // get results set from query
+            ResultSet rs = ps.getResultSet();
+
+            // store all records into their own Message objects
+            while(rs.next()) {
+                messages.add(new Message(
+                    rs.getInt("message_id"),
+                    rs.getInt("posted_by"),
+                    rs.getString("message_text"),
+                    rs.getLong("time_posted_epoch"))
+                );
+            }
+
+            return messages;
+            
+        } catch (Exception e) {
+            System.out.println("MessageDAO::getAllMessages: " + e.getMessage() + "\n");
+        }
         return null;
     }
 }

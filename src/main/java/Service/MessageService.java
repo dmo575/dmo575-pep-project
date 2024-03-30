@@ -2,6 +2,7 @@ package Service;
 
 import DAO.MessageDAO;
 import Model.Message;
+import java.util.ArrayList;
 
 public class MessageService {
     private MessageDAO messageDAO = new MessageDAO();
@@ -19,6 +20,10 @@ public class MessageService {
 
         // asks dao to send message to the database
         return messageDAO.insertMessage(message);
+    }
+
+    public ArrayList<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
     }
     
 }
