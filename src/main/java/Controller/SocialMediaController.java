@@ -45,17 +45,22 @@ public class SocialMediaController {
 
             // attempt to extrac the json out of the response body and parse its data into an account object
             Account account = om.readValue(context.body(), Account.class);
+            //System.out.print("received acc object:\n");
+            //System.out.print(account);
+
+
 
             // ask the service class to add thew new account (this throws an exception if the account data is not valid)
-            accountService.addAccount(account);
+            Account new_account = accountService.addAccount(account);
 
+            //System.out.print("final acc object:\n");
+            //System.out.println(new_account);
+
+            context.json(new_account);
             
         } catch (Exception e) {
 
             context.status(404);
         }
-
     }
-
-
 }

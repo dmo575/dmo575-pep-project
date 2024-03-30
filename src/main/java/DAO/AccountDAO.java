@@ -41,14 +41,14 @@ public class AccountDAO {
                 // return the account to the called, containing the correct account id
                 return new Account(
                     new_account_id, 
-                    rs.getString("username"),
-                    rs.getString("password")
+                    account.username,
+                    account.password
                 );
             }
             
         } catch (Exception e) {
             // print to the console the error message of any potential exception that might have surfaced on the try block
-            System.out.println(e.getMessage());
+            System.out.println("AccountDAO::insertAccount: " + e.getMessage() + "\n");
         }
 
         return null;
@@ -89,7 +89,7 @@ public class AccountDAO {
 
         } catch (Exception e) {
             // print to the console the error message of any potential exception that might have surfaced on the try block
-            System.out.println(e.getMessage());
+            System.out.println("AccountDAO::getAllAccounts: " + e.getMessage() + "\n");
         }
 
         return null;
@@ -125,7 +125,7 @@ public class AccountDAO {
 
         } catch (Exception e) {
             // print to the console the error message of any potential exception that might have surfaced on the try block
-            System.out.println(e.getMessage());
+            System.out.println("AccountDAO::getAccountByUsername: " + e.getMessage() + "\n");
         }
 
         return null;
