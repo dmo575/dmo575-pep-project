@@ -18,4 +18,18 @@ public class AccountService {
         // ask DAO to add new account to the database
         return accountDAO.insertAccount(account);
     }
+
+    // returns true of the username and password of the account are valid
+    public Account validateAccount(Account account) {
+
+        // try to get an account by username
+        Account validated_account = accountDAO.getAccountByUsername(account.username);
+
+        // if we managed to get an account and its password matches the one provided to this method's account argument, the data is valid
+        if(validated_account != null && validated_account.password.equals(account.password)) {
+            return validated_account;
+        }
+
+        return null;
+    }
 }

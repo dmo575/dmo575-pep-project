@@ -25,6 +25,8 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
         app.post("/register", this::registerHandler);
+        app.post("/login", this::loginHandler);
+
 
         return app;
     }
@@ -43,24 +45,40 @@ public class SocialMediaController {
 
         try {
 
-            // attempt to extrac the json out of the response body and parse its data into an account object
+            // attempt to extract the json out of the response body and parse its data into an account object
             Account account = om.readValue(context.body(), Account.class);
-            //System.out.print("received acc object:\n");
-            //System.out.print(account);
-
-
 
             // ask the service class to add thew new account (this throws an exception if the account data is not valid)
             Account new_account = accountService.addAccount(account);
-
-            //System.out.print("final acc object:\n");
-            //System.out.println(new_account);
 
             context.json(new_account);
             
         } catch (Exception e) {
 
-            context.status(404);
+            context.status(400);
+        }
+    }
+
+    // Handler for a POST request on route /login.
+    // checks if the user can login or not
+    private void loginHandler(Context context) {
+
+        try {
+
+            // get account object from the response body of the HTTP request
+            Account account = om.readValue(context.body(), Account.class);
+
+            // ask the service class to add thew new account (this throws an exception if the account data is not valid)
+            Account validated_account = accountService.validateAccount(account);
+
+            //System.out.println("validated_account: ");
+            //System.out.println(validated_account);
+
+            context.json(validated_account);
+            
+        } catch (Exception e) {
+
+            context.status(401);
         }
     }
 }
