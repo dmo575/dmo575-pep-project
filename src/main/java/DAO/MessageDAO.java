@@ -39,6 +39,7 @@ public class MessageDAO {
                 // return the message to the caller, containing the correct message id
                 return new Message(
                     message_id,
+                    message.posted_by,
                     message.message_text,
                     message.time_posted_epoch
                 );

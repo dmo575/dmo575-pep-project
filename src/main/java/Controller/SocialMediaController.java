@@ -61,7 +61,7 @@ public class SocialMediaController {
             
         } catch (Exception e) {
 
-            context.status(400).result(e.getMessage());
+            context.status(400);
         }
     }
 
@@ -82,7 +82,7 @@ public class SocialMediaController {
             
         } catch (Exception e) {
 
-            context.status(401).result("Login failed.");
+            context.status(401);
         }
     }
 
@@ -106,7 +106,7 @@ public class SocialMediaController {
             
         } catch (Exception e) {
 
-            context.status(400).result(e.getMessage());
+            context.status(400);
         }
     }
 }
